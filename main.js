@@ -1,29 +1,42 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const pokemonButtons = document.querySelectorAll(".pokemon-btn");
 
-let myPikachu = document.querySelector("#myPikachu");
+    pokemonButtons.forEach((button) => {
+        button.addEventListener("click", async () => {
+            const pokemonName = button.getAttribute("data-pokemon");
+            const apiUrl = `https://pokeapi.co/api/v2/pokemon/${pokemonName}`;
+            
+            try {
+                const res = await fetch(apiUrl);
+                if (!res.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                const data = await res.json();
+                const img = data.sprites.front_default;
 
-myPikachu.addEventListener("click", async () => {
-    let res = await (await fetch("https://pokeapi.co/api/v2/pokemon/mewtwo")).json();
-    let img = res.sprites.front_default;
-    // let defaultImg = colocar imagen por defecto
-
-
-    Swal.fire({
-        title: `${res.name}`,
-        text: 'Modal with a custom image.',
-        // imageUrl: `${res.sprites.front_default}`,
-        imageUrl: `${(img) ? img : defaultImg}`,
-        html: `
-            ${res.stats.map(data => `
-                <input 
-                    type="range" 
-                    id="uno" 
-                    value="${data.base_stat}">
-                <label for="uno"> 
-                    ${data.base_stat} 
-                    ${data.stat.name}</label><br>
-                    `).join("")}   
-        `,
-        imageWidth: "80%",
-        imageHeight: "80%",
+                Swal.fire({
+                    title: `${data.name}`,
+                    text: 'Modal with custom image and stats',
+                    imageUrl: img,
+                    html: `
+                        ${data.stats.map((stat) => `
+                            <div class="stat">
+                                <label>${stat.stat.name}:</label>
+                                <progress max="100" value="${stat.base_stat}">${stat.base_stat}</progress>
+                            </div>
+                        `).join("")}
+                    `,
+                    imageWidth: "80%",
+                    imageHeight: "auto",
+                });
+            } catch (error) {
+                console.error(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                });
+            }
+        });
     });
 });
