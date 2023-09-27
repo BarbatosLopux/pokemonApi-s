@@ -10,6 +10,6 @@ A partir de este proyecto podemos identificar el consumo de api's, en este caso 
 
 ## VISUALIZACION DE LA PAGINA Y CONTENIDOS. 
 
-![Alt text](image-1.png)
+![Alt text](image.png)
 
 Lanzador de la pagina: https://barbatoslopux.github.io/pokemonApi-s/
