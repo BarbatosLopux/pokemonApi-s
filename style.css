@@ -1,13 +1,3 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-}
 
 .pokemon-container {
     display: flex;
@@ -19,32 +9,10 @@ body {
 
 .pokemon {
     text-align: center;
-    background-color: #fff;
+    background-image: url(tarjeta.jpg);
     border-radius: 2rem; 
     padding: 1rem; 
     box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1); 
-}
-
-.pokemon-btn {
-    background-color: #ffcc29; 
-    color: #333;
-    border: none;
-    border-radius: 1rem; 
-    padding: 1rem 2rem; 
-    cursor: pointer;
-    font-size: 1.2rem; 
-    font-weight: bold;
-    text-transform: uppercase;
-    transition: background-color 0.3s, transform 0.3s;
-    margin: 1%; 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.pokemon-btn:hover {
-    background-color: #ffb700; 
-    transform: translateY(-2%);
 }
 
 .video-container {
@@ -61,7 +29,30 @@ body {
     background-color: #2479da;
     margin-left: 35%; 
     margin-right: 10%; 
-    margin-bottom: 4%;
-    margin-top: 8%;
+    margin-bottom: 3%;
+    margin-top: 3%;
     border-radius: 8%;
+}
+
+/* Agrega este CSS a tu archivo style.css o dentro de una etiqueta <style> en el <head> de tu HTML */
+.pokemon {
+    /* Cambia el color del texto en las tarjetas */
+    color: #333; /* Cambia el color a tu elección */
+    /* Cambia la fuente del texto en las tarjetas */
+    font-family: Arial, sans-serif; /* Cambia la fuente a tu elección */
+}
+
+/* Cambia el color del título (nombre del Pokémon) */
+.pokemon h3 {
+    color: #ee0707; /* Cambia el color a tu elección */
+}
+
+/* Cambia el color de las etiquetas (por ejemplo, "HP:") */
+.pokemon label {
+    color: #f1f1f1; /* Cambia el color a tu elección */
+}
+
+.pokemon .save-btn {
+    background-color: #00ff80; 
+    color: #FFFFFF; 
 }
