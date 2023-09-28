@@ -1,30 +1,27 @@
-var urlMain = "https://pokeapi.co/api/v2/pokemon/"
-var query = "?offset=500&limit=500"
-let cons = ""
+var urlMain = "https://pokeapi.co/api/v2/pokemon/";
+var cons = "";
 
-var number = 20;
-
-
-const lectorCantidad = (value)=>{
-    let cant = `?offset=0&limit=${value}`
-    return urlMain+cant;
+const lectorCantidad = (value) => {
+    let cant = `?offset=0&limit=${value}`;
+    return urlMain + cant;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     const pokemonContainer = document.getElementById("pokemon-container");
+    const pokemonCountInput = document.getElementById("pokemon-count-input");
 
     async function fetchPokemonData(pokemonName) {
         try {
-            if(pokemonName === undefined){
+            if (pokemonName === undefined) {
                 return {}
-            }else{
+            } else {
                 const apiUrl = `https://pokeapi.co/api/v2/pokemon/${pokemonName}`;
                 console.log(apiUrl);
                 const res = await fetch(apiUrl);
                 if (!res.ok) {
                     throw new Error("Network response was not ok");
                 }
-    
+
                 const data = await res.json();
                 return data;
             }
@@ -38,62 +35,57 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function createPokemonCard(pokemonName, data) {
+        const card = document.createElement("div");
+        card.classList.add("pokemon");
+        card.innerHTML = `
+            <h3>${pokemonName}</h3>
+            <img src="${data.sprites.front_default}" alt="${pokemonName}">
+            <p><label>HP:</label></p>
+            <input type="range" class="hp-progress" max="50" value="${(data.stats[0].base_stat / 255) * 100}">
+            <p><label>Attack:</label></p>
+            <input type="range" class="attack-progress" max="50" value="${(data.stats[1].base_stat / 255) * 100}">
+            <p><label>Defense:</label></p>
+            <input type="range" class="defense-progress" max="50" value="${(data.stats[2].base_stat / 255) * 100}">
+            <p><label>Special Attack:</label></p>
+            <input type="range" class="special-attack-progress" max="50" value="${(data.stats[3].base_stat / 255) * 100}">
+            <p><label>Special Defense:</label></p>
+            <input type="range" class="special-defense-progress" max="50" value="${(data.stats[4].base_stat / 255) * 100}">
+            <p><label>Speed:</label></p>
+            <input type="range" class="speed-progress" max="50" value="${(data.stats[5].base_stat / 255) * 100}">
+            <p><button class="save-btn">Save</button></p>
+        `;
 
-function createPokemonCard(pokemonName, data) {
-    const card = document.createElement("div");
-    card.classList.add("pokemon");
-    card.innerHTML = `
-        <h3>${pokemonName}</h3>
-        <img src="${data.sprites.front_default}" alt="${pokemonName}">
-        <p><label>HP:</label></p>
-        <p><progress class="hp-progress" max="50" value="${(data.stats[0].base_stat / 255) * 100}"></progress></p>
-        <p><label>Attack:</label></p>
-        <p><progress class="attack-progress" max="50" value="${(data.stats[1].base_stat / 255) * 100}"></progress></p>
-        <p><label>Defense:</label></p>
-        <p><progress class="defense-progress" max="50" value="${(data.stats[2].base_stat / 255) * 100}"></progress></p>
-        <p><label>Special Attack:</label></p>
-        <p><progress class="special-attack-progress" max="50" value="${(data.stats[3].base_stat / 255) * 100}"></progress></p>
-        <p><label>Special Defense:</label></p>
-        <p><progress class="special-defense-progress" max="50" value="${(data.stats[4].base_stat / 255) * 100}"></progress></p>
-        <p><label>Speed:</label></p>
-        <p><progress class="speed-progress" max="50" value="${(data.stats[5].base_stat / 255) * 100}"></progress></p>
-        <p><button class="save-btn">Save</button></p>
-    `;
+        const saveBtn = card.querySelector(".save-btn");
 
-    const saveBtn = card.querySelector(".save-btn");
+        saveBtn.addEventListener("click", () => {
+        });
 
-    saveBtn.addEventListener("click", () => {
-    });
+        return card;
+    }
 
-    return card;
-}
-
-    const pokemones_arra =async () =>{
-        let res = await (await fetch(lectorCantidad(100))).json();
-        console.log(res)
-        let arrPokemones = res.results.map( ele =>{
+    const pokemones_arra = async (count) => {
+        let res = await (await fetch(lectorCantidad(count))).json();
+        console.log(res);
+        let arrPokemones = res.results.map((ele) => {
             return {
                 name: ele.name,
-                url: ele.url
-            }
+                url: ele.url,
+            };
         });
-        console.log(arrPokemones)
+        console.log(arrPokemones);
         return arrPokemones;
     }
 
-    (async()=>{
-        let arr = await pokemones_arra();
-        arr.forEach(async (ele) =>{
+    pokemonCountInput.addEventListener("input", async () => {
+        const pokemonCount = pokemonCountInput.value;
+        pokemonContainer.innerHTML = "";
+        let arr = await pokemones_arra(pokemonCount);
+        arr.forEach(async (ele) => {
             let dataPoke = await fetchPokemonData(ele.name);
-
             const card = createPokemonCard(ele.name, dataPoke);
-
-            pokemonContainer.insertAdjacentElement("beforeend",card)
-    
-            const data = await fetchPokemonData();
-            console.log(data);
-            
-        })
-    })()
+            pokemonContainer.insertAdjacentElement("beforeend", card);
+        });
+    });
 });
 
