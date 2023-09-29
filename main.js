@@ -1,5 +1,5 @@
-var urlMain = "https://pokeapi.co/api/v2/pokemon/";
-var cons = "";
+
+let urlMain = "https://pokeapi.co/api/v2/pokemon/";
 
 const lectorCantidad = (value) => {
     let cant = `?offset=0&limit=${value}`;
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return {}
             } else {
                 const apiUrl = `https://pokeapi.co/api/v2/pokemon/${pokemonName}`;
-                console.log(apiUrl);
+                
                 const res = await fetch(apiUrl);
                 if (!res.ok) {
                     throw new Error("Network response was not ok");
@@ -41,40 +41,68 @@ document.addEventListener("DOMContentLoaded", () => {
         card.innerHTML = `
             <h3>${pokemonName}</h3>
             <img src="${data.sprites.front_default}" alt="${pokemonName}">
-            <p><label>HP:</label> ${data.stats[0].base_stat}</p>
-            <p><input type="range" class="hp-progress" max="255" value="${data.stats[0].base_stat}"></p>
-            <p><label>Attack:</label> ${data.stats[1].base_stat}</p>
-            <p><input type="range" class="attack-progress" max="255" value="${data.stats[1].base_stat}"></p>
-            <p><label>Defense:</label> ${data.stats[2].base_stat}</p>
-            <p><input type="range" class="defense-progress" max="255" value="${data.stats[2].base_stat}"></p>
-            <p><label>Special Attack:</label> ${data.stats[3].base_stat}</p>
-            <p><input type="range" class="special-attack-progress" max="255" value="${data.stats[3].base_stat}"></p>
-            <p><label>Special Defense:</label> ${data.stats[4].base_stat}</p>
-            <p><input type="range" class="special-defense-progress" max="255" value="${data.stats[4].base_stat}"></p>
-            <p><label>Speed:</label> ${data.stats[5].base_stat}</p>
-            <p><input type="range" class="speed-progress" max="255" value="${data.stats[5].base_stat}"></p>
-            <p><button class="save-btn">Save</button></p>
+            <form>
+                <label>HP:</label> ${data.stats[0].base_stat}
+                <input type="range" class="hp-progress" max="255" name="hp" value="${data.stats[0].base_stat}">
+                <label>Attack:</label> ${data.stats[1].base_stat}
+                <input type="range" class="attack-progress" max="255" name="Attack" value="${data.stats[1].base_stat}">
+                <label>Defense:</label> ${data.stats[2].base_stat}
+                <input type="range" class="defense-progress" max="255" name="Defense" value="${data.stats[2].base_stat}">
+                <label>Special Attack:</label> ${data.stats[3].base_stat}
+                <input type="range" class="special-attack-progress" max="255"  name="Special Attack" value="${data.stats[3].base_stat}">
+                <label>Special Defense:</label> ${data.stats[4].base_stat}
+                <input type="range" class="special-defense-progress" max="255" name="Special Defense" value="${data.stats[4].base_stat}">
+                <label>Speed:</label> ${data.stats[5].base_stat}
+                <input type="range" class="speed-progress" max="255" name="Speed" value="${data.stats[5].base_stat}">
+            </form>
+            <button class="save-btn">Save</button>
         `;
+
     
-        const saveBtn = card.querySelector(".save-btn");
-    
-        saveBtn.addEventListener("click", () => {
+        card.querySelector(".save-btn").addEventListener("click", async () => {
+            try {
+                const name = pokemonName;
+                const stats = data.stats.map(stat => ({
+                    name: stat.stat.name,
+                    base_stat: stat.base_stat
+                }));
+
+                const response = await fetch("https://6509d0e4f6553137159c123e.mockapi.io/NuevaStatsPOKEMON", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        name: name,
+                        estadisticas: stats
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+
+              
+                updatePokemonCards();
+            } catch (error) {
+                console.error(error);
+                Swal.fire({
+                    text: 'datos subidos correctamente',
+                });
+            }
         });
-    
+
         return card;
     }
     
-
     const pokemones_arra = async (count) => {
         let res = await (await fetch(lectorCantidad(count))).json();
-        console.log(res);
+        
         let arrPokemones = res.results.map((ele) => {
             return {
                 name: ele.name,
                 url: ele.url,
             };
         });
-        console.log(arrPokemones);
+        
         return arrPokemones;
     }
 
@@ -87,6 +115,38 @@ document.addEventListener("DOMContentLoaded", () => {
             const card = createPokemonCard(ele.name, dataPoke);
             pokemonContainer.insertAdjacentElement("beforeend", card);
         });
+
+        const request =await (await fetch(arr[0].url)).json();
+        let mapa = request.stats.map(element =>{
+            return [element.stat.name,element.base_stat]
+        }) 
+
+       
+        async function updatePokemonCards() {
+            const response = await fetch("https://6509d0e4f6553137159c123e.mockapi.io/NuevaStatsPOKEMON");
+            if (response.ok) {
+                const data = await response.json();
+
+               
+                const cards = document.querySelectorAll(".pokemon");
+                cards.forEach(card => {
+                    const name = card.querySelector("h3").textContent;
+                    const newData = data.find(item => item.name === name);
+
+                    if (newData) {
+                       
+                        const form = card.querySelector("form");
+                        newData.estadisticas.forEach(stat => {
+                            const input = form.querySelector(`[name="${stat.name}"]`);
+                            if (input) {
+                                input.value = stat.base_stat;
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        updatePokemonCards();
     });
 });
-
