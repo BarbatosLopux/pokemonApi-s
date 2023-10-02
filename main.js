@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     base_stat: stat.base_stat
                 }));
 
-                const response = await fetch("https://6509d0e4f6553137159c123e.mockapi.io/NuevaStatsPOKEMON", {
+                const response = await fetch(" http://127.0.0.2:5010/pokemon", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
        
         async function updatePokemonCards() {
-            const response = await fetch("https://6509d0e4f6553137159c123e.mockapi.io/NuevaStatsPOKEMON");
+            const response = await fetch(" http://127.0.0.2:5010/pokemon");
             if (response.ok) {
                 const data = await response.json();
 

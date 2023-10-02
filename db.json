@@ -1,0 +1,46 @@
+{
+  "pokemon": [
+    {
+      "name": "bulbasaur",
+      "estadisticas": {
+        "hp": 45,
+        "attack": 49,
+        "defense": 49,
+        "special-attack": 65,
+        "special-defense": 65,
+        "speed": 45
+      },
+      "id": "1"
+    },
+    {
+      "name": "ivysaur",
+      "estadisticas": [
+        {
+          "name": "hp",
+          "base_stat": 60
+        },
+        {
+          "name": "attack",
+          "base_stat": 62
+        },
+        {
+          "name": "defense",
+          "base_stat": 63
+        },
+        {
+          "name": "special-attack",
+          "base_stat": 80
+        },
+        {
+          "name": "special-defense",
+          "base_stat": 80
+        },
+        {
+          "name": "speed",
+          "base_stat": 60
+        }
+      ],
+      "id": "68nvq7i"
+    }
+  ]
+}
